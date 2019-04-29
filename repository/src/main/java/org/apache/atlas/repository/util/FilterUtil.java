@@ -37,13 +37,15 @@ public class FilterUtil {
     public static Predicate getPredicateFromSearchFilter(SearchFilter searchFilter) {
         List<Predicate> predicates = new ArrayList<>();
 
-        final String       type           = searchFilter.getParam(SearchFilter.PARAM_TYPE);
-        final String       name           = searchFilter.getParam(SearchFilter.PARAM_NAME);
-        final String       supertype      = searchFilter.getParam(SearchFilter.PARAM_SUPERTYPE);
-        final String       serviceType    = searchFilter.getParam(SearchFilter.PARAM_SERVICETYPE);
-        final String       notSupertype   = searchFilter.getParam(SearchFilter.PARAM_NOT_SUPERTYPE);
-        final String       notServiceType = searchFilter.getParam(SearchFilter.PARAM_NOT_SERVICETYPE);
-        final List<String> notNames       = searchFilter.getParams(SearchFilter.PARAM_NOT_NAME);
+
+        final String       type         = searchFilter.getParam(SearchFilter.PARAM_TYPE);
+        final String       name         = searchFilter.getParam(SearchFilter.PARAM_NAME);
+        final String       supertype    = searchFilter.getParam(SearchFilter.PARAM_SUPERTYPE);
+        final String	   serviceType  = searchFilter.getParam(SearchFilter.PARAM_SERVICETYPE);
+        
+        final String       notSupertype = searchFilter.getParam(SearchFilter.PARAM_NOT_SUPERTYPE);
+        final String	   notServiceType = searchFilter.getParam(SearchFilter.PARAM_NOT_SERVICETYPE);
+        final List<String> notNames     = searchFilter.getParams(SearchFilter.PARAM_NOT_NAME);
 
         // Add filter for the type/category
         if (StringUtils.isNotBlank(type)) {
@@ -53,6 +55,11 @@ public class FilterUtil {
         // Add filter for the name
         if (StringUtils.isNotBlank(name)) {
             predicates.add(getNamePredicate(name));
+        }
+        
+        //Add filter for the serviceType
+        if(StringUtils.isNotBlank(serviceType)) {
+        	predicates.add(getServiceTypePredicate(serviceType));
         }
 
         // Add filter for the serviceType
@@ -69,6 +76,16 @@ public class FilterUtil {
         if (StringUtils.isNotBlank(notSupertype)) {
             predicates.add(new NotPredicate(getSuperTypePredicate(notSupertype)));
         }
+        
+        // Add filter for the serviceType negation
+        // NOTE: Creating code for the exclusion of multiple service types is currently useless. 
+        // In fact the getSearchFilter in TypeREST.java uses the HttpServletRequest.getParameter(key) 
+        // that if the key takes more values it takes only the first the value. Could be usefull
+        // to change the getSearchFilter to use getParameterValues instead of getParameter.
+        if (StringUtils.isNotBlank(notServiceType)) {
+            predicates.add(new NotPredicate(getServiceTypePredicate(notServiceType)));
+        }
+
 
         // Add filter for the serviceType negation
         // NOTE: Creating code for the exclusion of multiple service types is currently useless.
@@ -102,19 +119,26 @@ public class FilterUtil {
             }
         };
     }
-
+    
     private static Predicate getServiceTypePredicate(final String serviceType) {
-        return new Predicate() {
+    	return new Predicate() {
+            private boolean isClassificationType(Object o) {
+                return o instanceof AtlasClassificationType;
+            }
+
             private boolean isAtlasType(Object o) {
                 return o instanceof AtlasType;
             }
 
-            @Override
-            public boolean evaluate(Object o) {
-                return isAtlasType(o) && Objects.equals(((AtlasType) o).getServiceType(), serviceType);
-            }
-        };
+			@Override
+			public boolean evaluate(Object o) {
+                return o != null && isAtlasType(o) && !isClassificationType(o) 
+                		&& Objects.equals(((AtlasType) o).getServiceType(), serviceType);
+			}
+    		
+    	};
     }
+
 
     private static Predicate getSuperTypePredicate(final String supertype) {
         return new Predicate() {

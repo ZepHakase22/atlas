@@ -40,7 +40,8 @@ import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.PUBLIC_
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.PROPERTY)
 public class SearchFilter {
-    public static final String PARAM_TYPE            = "type";
+
+	public static final String PARAM_TYPE            = "type";
     public static final String PARAM_NAME            = "name";
     public static final String PARAM_SUPERTYPE       = "supertype";
     public static final String PARAM_SERVICETYPE     = "servicetype";
