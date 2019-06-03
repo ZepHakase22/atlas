@@ -32,6 +32,41 @@ The metadata veracity is maintained by leveraging Apache Ranger to prevent
 non-authorized access paths to data at runtime.
 Security is both role based (RBAC) and attribute based (ABAC).
 
+What is the myMaster branch
+===========================
+
+Despite being a contributor to Apache Atlas, it sometimes happens that some pull
+requests, for any reason, are not accepted by the review board. 
+The myMaster collects exactly the most updated release of the master to which are 
+added the pull-requests not yet accepted or which will never be inserted in the
+official master because after appropriate discussion, it was not considered
+appropriate to insert them.
+While strongly encouraging to use the official release of Atlas this branch
+reports here some variations or improvements with respect to that release. 
+I will always keep this branch up to date so that if these issues are committed
+in the future, I will update the myMaster branch accordingly.
+
+1. New Rest APIs to support serviceType attribute:
+   $ GET /typedef/servicetype/{servicetype}
+   $ GET /enumdef/servicetype/{servicetype}
+   $ GET /entitydef/servicetype/{servicetype}
+   $ GET /structdef/servicetype/{servicetype}
+   $ GET /relationshipdef/servicetype/{servicetype}
+   $ DELETE /typedef/servicetype/{servicetype}
+
+2. Using version 0.13 for rat plugin
+   # The Atlas master uses the 0.12 version of this plugin.
+
+3. FIX:Invalid path for AtlasClientV2Test.java
+   # AtlasClientV2Test.java should have the following path
+     $ client/client-v2 /src/test /java/org/apache/atlas/AtlasClientV2Test.java 
+   # instead of
+     $ client/client-v2 /src/test/java/org.apache.atlas/AtlasClientV2Test
+
+4. Added bin directory to .gitignore
+   # The .gitignore does not contains the bin directory
+
+5. FIX:Incorrect syntax for combine-children in repository pom
 
 Build Process
 =============
