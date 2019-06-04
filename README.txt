@@ -54,19 +54,10 @@ in the future, I will update the myMaster branch accordingly.
    $ GET /relationshipdef/servicetype/{servicetype}
    $ DELETE /typedef/servicetype/{servicetype}
 
-2. Using version 0.13 for rat plugin
-   # The Atlas master uses the 0.12 version of this plugin.
-
-3. FIX:Invalid path for AtlasClientV2Test.java
-   # AtlasClientV2Test.java should have the following path
-     $ client/client-v2 /src/test /java/org/apache/atlas/AtlasClientV2Test.java 
-   # instead of
-     $ client/client-v2 /src/test/java/org.apache.atlas/AtlasClientV2Test
-
-4. Added bin directory to .gitignore
+2. Added bin directory to .gitignore
    # The .gitignore does not contains the bin directory
 
-5. FIX:Incorrect syntax for combine-children in repository pom
+3. FIX:Incorrect syntax for combine-children in repository pom
 
 Build Process
 =============
